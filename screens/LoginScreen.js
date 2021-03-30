@@ -23,7 +23,11 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   //Sign In function
-  const signIn = () => {};
+  const signIn = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(error));
+  };
 
   return (
     <View style={styles.container}>
@@ -44,14 +48,15 @@ const LoginScreen = ({ navigation }) => {
           autoFocus
           type="email"
           value={email}
-          onChange={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <Input
           placeholder="Password"
           secureTextEntry
           type="password"
           value={password}
-          onChange={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
+          onSubmitEditing={signIn}
         />
       </View>
 
