@@ -34,8 +34,7 @@ const ChatScreen = ({ navigation, route }) => {
           <Avatar
             rounded
             source={{
-              uri:
-                "https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png",
+              uri: messages[0]?.data.photoURL,
             }}
           />
           <Text style={{ color: "white", marginLeft: 10, fontWeight: "700" }}>
@@ -71,21 +70,25 @@ const ChatScreen = ({ navigation, route }) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, messages]);
 
   //   Send message function
   const sendMessage = () => {
     Keyboard.dismiss();
 
-    //Create a new message in the right chat group on DB.
-    db.collection("chats").doc(route.params.id).collection("messages").add({
-      //get the timestamp from the firebase server to prevent location difference
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      message: input,
-      displayName: auth.currentUser.displayName,
-      email: auth.currentUser.email,
-      photoURL: auth.currentUser.photoURL,
-    });
+    if (input === "") {
+      alert("Can't send an empty message yaa goof!!!");
+    } else {
+      //Create a new message in the right chat group on DB.
+      db.collection("chats").doc(route.params.id).collection("messages").add({
+        //get the timestamp from the firebase server to prevent location difference
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        message: input,
+        displayName: auth.currentUser.displayName,
+        email: auth.currentUser.email,
+        photoURL: auth.currentUser.photoURL,
+      });
+    }
     //Make input null
     setInput("");
   };
@@ -120,7 +123,7 @@ const ChatScreen = ({ navigation, route }) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <ScrollView contentContainerStyle={{paddingTop: 15}}>
+            <ScrollView contentContainerStyle={{ paddingTop: 15 }}>
               {/* Chat goes here */}
               {messages.map(({ id, data }) =>
                 data.email === auth.currentUser.email ? (
@@ -232,20 +235,20 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   senderName: {
-      left: 10,
-      paddingRight: 10,
-      fontSize: 10,
-      color: "white"
+    left: 10,
+    paddingRight: 10,
+    fontSize: 10,
+    color: "white",
   },
   senderText: {
-      color: "white",
-      fontWeight: "500",
-      marginLeft: 10,
-      marginBottom: 15,
+    color: "white",
+    fontWeight: "500",
+    marginLeft: 10,
+    marginBottom: 15,
   },
   recieverText: {
-      color: "black",
-      fontWeight: "500",
-      marginLeft: 10
-  }
+    color: "black",
+    fontWeight: "500",
+    marginLeft: 10,
+  },
 });
