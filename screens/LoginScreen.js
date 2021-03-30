@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Input, Image } from "react-native-elements";
+import { auth } from "../firebase";
 
 const LoginScreen = ({ navigation }) => {
   // States for this view
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  //on load fire the effect.
+  useEffect(() => {
+    //when the user is signed in or out.
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      //if the user is signed in push to home screen
+      if (authUser) {
+        navigation.replace("Home");
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   //Sign In function
   const signIn = () => {};
